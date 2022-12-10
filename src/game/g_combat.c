@@ -264,6 +264,22 @@ CheckPowerArmor(edict_t *ent, vec3_t point, vec3_t normal, int damage,
 	{
 		return 0;
 	}
+	
+	int power_armor_screen_dmgxcell = 1;
+	int power_armor_screen_dmg_mul = 1;
+	int power_armor_screen_dmg_div = 3;
+	int power_armor_shield_dmgxcell = 2;
+	int power_armor_shield_dmg_mul = 2;
+	int power_armor_shield_dmg_div = 3;
+	if(sv_custom_settings->value)
+	{
+		power_armor_screen_dmgxcell = cs_power_armor_screen_dmgxcell->value;
+		power_armor_screen_dmg_mul = cs_power_armor_screen_dmg_mul->value;
+		power_armor_screen_dmg_div = cs_power_armor_screen_dmg_div->value;
+		power_armor_shield_dmgxcell = cs_power_armor_shield_dmgxcell->value;
+		power_armor_shield_dmg_mul = cs_power_armor_shield_dmg_mul->value;
+		power_armor_shield_dmg_div = cs_power_armor_shield_dmg_div->value;		
+	}
 
 	if (power_armor_type == POWER_ARMOR_SCREEN)
 	{
@@ -282,15 +298,15 @@ CheckPowerArmor(edict_t *ent, vec3_t point, vec3_t normal, int damage,
 			return 0;
 		}
 
-		damagePerCell = 1;
+		damagePerCell = power_armor_screen_dmgxcell; // 1
 		pa_te_type = TE_SCREEN_SPARKS;
-		damage = damage / 3;
+		damage = (power_armor_screen_dmg_mul * damage) / power_armor_screen_dmg_div; // 1*dmg /3
 	}
 	else
 	{
-		damagePerCell = 2;
+		damagePerCell = power_armor_shield_dmgxcell; //2
 		pa_te_type = TE_SHIELD_SPARKS;
-		damage = (2 * damage) / 3;
+		damage = (power_armor_shield_dmg_mul * damage) / power_armor_shield_dmg_div; // 2*dmg /3
 	}
 
 	save = power * damagePerCell;
@@ -362,13 +378,50 @@ CheckArmor(edict_t *ent, vec3_t point, vec3_t normal, int damage,
 
 	armor = GetItemByIndex(index);
 
-	if (dflags & DAMAGE_ENERGY)
+	if (sv_custom_settings->value)
 	{
-		save = ceil(((gitem_armor_t *)armor->info)->energy_protection * damage);
+		int teste = ceil(((gitem_armor_t *)armor->info)->energy_protection * 10);
+		int testp = ceil(((gitem_armor_t *)armor->info)->normal_protection * 10);
+		
+		if (dflags & DAMAGE_ENERGY && teste == 0)
+		{
+			save = ceil(cs_armor_jacket_abse->value * damage);
+		}
+		else if (dflags & DAMAGE_ENERGY && teste == 3)
+		{
+			save = ceil(cs_armor_combat_abse->value * damage);
+		}
+		else if (dflags & DAMAGE_ENERGY && teste == 6)
+		{
+			save = ceil(cs_armor_body_abse->value * damage);
+		}
+		else if (testp == 3)
+		{
+			save = ceil(cs_armor_jacket_absp->value * damage);
+		}
+		else if (testp == 6)
+		{
+			save = ceil(cs_armor_combat_absp->value * damage);
+		}
+		else if (testp == 8)
+		{
+			save = ceil(cs_armor_body_absp->value * damage);
+		}
+		else
+		{
+			save = 0;
+		}
 	}
 	else
 	{
-		save = ceil(((gitem_armor_t *)armor->info)->normal_protection * damage);
+		if (dflags & DAMAGE_ENERGY)
+		{
+			save = ceil(((gitem_armor_t *)armor->info)->energy_protection * damage);
+		}
+		else
+		{
+			save = ceil(((gitem_armor_t *)armor->info)->normal_protection * damage);
+		}
 	}
 
 	if (save >= client->pers.inventory[index])
@@ -550,10 +603,44 @@ T_Damage(edict_t *targ, edict_t *inflictor, edict_t *attacker,
 
 	meansOfDeath = mod;
 
+	float damage_modifier_hardplus = 1.0;
+	float damage_modifier_hard = 1.0;
+	float damage_modifier_medium = 1.0;
+	float damage_modifier_easy = 0.5;
+	if(sv_custom_settings->value)
+	{
+		damage_modifier_hardplus = cs_damage_modifier_hardplus->value;
+		damage_modifier_hard = cs_damage_modifier_hard->value;
+		damage_modifier_medium = cs_damage_modifier_medium->value;
+		damage_modifier_easy = cs_damage_modifier_easy->value;
+	}
+	
+	/* hardplus, hard and medium mode take default damage */
+	if (deathmatch->value == 0 && targ->client)
+	{
+		if (skill->value == SKILL_HARDPLUS)
+		{
+			damage *= damage_modifier_hardplus;
+		}
+		else if (skill->value == SKILL_HARD)
+		{
+			damage *= damage_modifier_hard;
+		}
+		else if (skill->value == SKILL_MEDIUM)
+		{
+			damage *= damage_modifier_medium;
+		}
+
+		if (!damage)
+		{
+			damage = 1;
+		}
+	}
+
 	/* easy mode takes half damage */
 	if ((skill->value == SKILL_EASY) && (deathmatch->value == 0) && targ->client)
 	{
-		damage *= 0.5;
+		damage *= damage_modifier_easy; //0.5
 
 		if (!damage)
 		{
@@ -574,11 +661,17 @@ T_Damage(edict_t *targ, edict_t *inflictor, edict_t *attacker,
 
 	VectorNormalize(dir);
 
+	int damage_sneak_attack = 2;
+	if(sv_custom_settings->value)
+	{
+		damage_sneak_attack = cs_damage_sneak_attack->value;
+	}
+
 	/* bonus damage for suprising a monster */
 	if (!(dflags & DAMAGE_RADIUS) && (targ->svflags & SVF_MONSTER) &&
 		(attacker->client) && (!targ->enemy) && (targ->health > 0))
 	{
-		damage *= 2;
+		damage *= damage_sneak_attack; //2
 	}
 
 	if (targ->flags & FL_NO_KNOCKBACK)
