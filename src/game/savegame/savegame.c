@@ -204,6 +204,7 @@ InitGame(void)
 
 	/* latched vars */
 	sv_cheats = gi.cvar("cheats", "0", CVAR_SERVERINFO | CVAR_LATCH);
+	sv_custom_settings = gi.cvar("custom_settings", "0", CVAR_SERVERINFO | CVAR_LATCH);
 	gi.cvar("gamename", GAMEVERSION, CVAR_SERVERINFO | CVAR_LATCH);
 	gi.cvar("gamedate", BUILD_DATE, CVAR_SERVERINFO | CVAR_LATCH);
 	maxclients = gi.cvar("maxclients", "4", CVAR_SERVERINFO | CVAR_LATCH);
@@ -245,6 +246,145 @@ InitGame(void)
 	/* others */
 	aimfix = gi.cvar("aimfix", "0", CVAR_ARCHIVE);
 	g_machinegun_norecoil = gi.cvar("g_machinegun_norecoil", "0", CVAR_ARCHIVE);
+	
+	/* custom settings */
+	cs_player_health_start = gi.cvar("cs_player_health_start", "100", CVAR_ARCHIVE);
+	cs_player_health_max = gi.cvar("cs_player_health_max", "100", CVAR_ARCHIVE);
+	
+	cs_player_ammo_shells = gi.cvar("cs_player_ammo_shells", "100", CVAR_ARCHIVE);
+	cs_player_ammo_bullets = gi.cvar("cs_player_ammo_bullets", "200", CVAR_ARCHIVE);
+	cs_player_ammo_grenades = gi.cvar("cs_player_ammo_grenades", "50", CVAR_ARCHIVE);
+	cs_player_ammo_rockets = gi.cvar("cs_player_ammo_rockets", "50", CVAR_ARCHIVE);
+	cs_player_ammo_slugs = gi.cvar("cs_player_ammo_slugs", "50", CVAR_ARCHIVE);
+	cs_player_ammo_cells = gi.cvar("cs_player_ammo_cells", "200", CVAR_ARCHIVE);
+	
+	cs_bandolier_ammo_shells = gi.cvar("cs_bandolier_ammo_shells", "150", CVAR_ARCHIVE);
+	cs_bandolier_ammo_bullets = gi.cvar("cs_bandolier_ammo_bullets", "250", CVAR_ARCHIVE);
+	cs_bandolier_ammo_grenades = gi.cvar("cs_bandolier_ammo_grenades", "50", CVAR_ARCHIVE);
+	cs_bandolier_ammo_rockets = gi.cvar("cs_bandolier_ammo_rockets", "50", CVAR_ARCHIVE);
+	cs_bandolier_ammo_slugs = gi.cvar("cs_bandolier_ammo_slugs", "75", CVAR_ARCHIVE);
+	cs_bandolier_ammo_cells = gi.cvar("cs_bandolier_ammo_cells", "250", CVAR_ARCHIVE);
+	
+	cs_ammopack_ammo_shells = gi.cvar("cs_ammopack_ammo_shells", "200", CVAR_ARCHIVE);
+	cs_ammopack_ammo_bullets = gi.cvar("cs_ammopack_ammo_bullets", "300", CVAR_ARCHIVE);
+	cs_ammopack_ammo_grenades = gi.cvar("cs_ammopack_ammo_grenades", "100", CVAR_ARCHIVE);
+	cs_ammopack_ammo_rockets = gi.cvar("cs_ammopack_ammo_rockets", "100", CVAR_ARCHIVE);
+	cs_ammopack_ammo_slugs = gi.cvar("cs_ammopack_ammo_slugs", "100", CVAR_ARCHIVE);
+	cs_ammopack_ammo_cells = gi.cvar("cs_ammopack_ammo_cells", "300", CVAR_ARCHIVE);
+
+	cs_silencer_shots_quantity = gi.cvar("cs_silencer_shots_quantity", "30", CVAR_ARCHIVE);
+	cs_quad_duration = gi.cvar("cs_quad_duration", "300", CVAR_ARCHIVE);
+	cs_rebreather_duration = gi.cvar("cs_rebreather_duration", "300", CVAR_ARCHIVE);
+	cs_environmentsuit_duration = gi.cvar("cs_environmentsuit_duration", "300", CVAR_ARCHIVE);
+	cs_invulnerability_duration = gi.cvar("cs_invulnerability_duration", "300", CVAR_ARCHIVE);
+	cs_powerup_quantity_easy = gi.cvar("cs_powerup_quantity_easy", "100", CVAR_ARCHIVE);
+	cs_powerup_quantity_medium = gi.cvar("cs_powerup_quantity_medium", "2", CVAR_ARCHIVE);
+	cs_powerup_quantity_hard = gi.cvar("cs_powerup_quantity_hard", "1", CVAR_ARCHIVE);
+	cs_powerup_quantity_hardplus = gi.cvar("cs_powerup_quantity_hardplus", "1", CVAR_ARCHIVE);
+
+	cs_health_small_val = gi.cvar("cs_health_small_val", "2", CVAR_ARCHIVE);
+	cs_health_val = gi.cvar("cs_health_val", "10", CVAR_ARCHIVE);
+	cs_health_large_val = gi.cvar("cs_health_large_val", "25", CVAR_ARCHIVE);
+	cs_health_mega_val = gi.cvar("cs_health_mega_val", "100", CVAR_ARCHIVE);
+	cs_health_mega_decay = gi.cvar("cs_health_mega_decay", "1", CVAR_ARCHIVE);
+	cs_adrenaline_val = gi.cvar("cs_adrenaline_val", "1", CVAR_ARCHIVE);
+	cs_adrenaline_heal = gi.cvar("cs_adrenaline_heal", "1", CVAR_ARCHIVE);
+	cs_ancienthead_val = gi.cvar("cs_ancienthead_val", "2", CVAR_ARCHIVE);
+	cs_ancienthead_heal = gi.cvar("cs_ancienthead_heal", "0", CVAR_ARCHIVE);
+	cs_player_health_cap = gi.cvar("cs_player_health_cap", "0", CVAR_ARCHIVE);
+	cs_player_health_force_max = gi.cvar("cs_player_health_force_max", "0", CVAR_ARCHIVE);
+
+	cs_armor_shard_val = gi.cvar("cs_armor_shard_val", "2", CVAR_ARCHIVE);
+	cs_armor_jacket_val = gi.cvar("cs_armor_jacket_val", "25", CVAR_ARCHIVE);
+	cs_armor_combat_val = gi.cvar("cs_armor_combat_val", "50", CVAR_ARCHIVE);
+	cs_armor_body_val = gi.cvar("cs_armor_body_val", "100", CVAR_ARCHIVE);
+	cs_armor_jacket_max = gi.cvar("cs_armor_jacket_max", "50", CVAR_ARCHIVE);
+	cs_armor_combat_max = gi.cvar("cs_armor_combat_max", "100", CVAR_ARCHIVE);
+	cs_armor_body_max = gi.cvar("cs_armor_body_max", "200", CVAR_ARCHIVE);
+	cs_armor_jacket_absp = gi.cvar("cs_armor_jacket_absp", ".30", CVAR_ARCHIVE);
+	cs_armor_combat_absp = gi.cvar("cs_armor_combat_absp", ".60", CVAR_ARCHIVE);
+	cs_armor_body_absp = gi.cvar("cs_armor_body_absp", ".80", CVAR_ARCHIVE);
+	cs_armor_jacket_abse = gi.cvar("cs_armor_jacket_abse", ".00", CVAR_ARCHIVE);
+	cs_armor_combat_abse = gi.cvar("cs_armor_combat_abse", ".30", CVAR_ARCHIVE);
+	cs_armor_body_abse = gi.cvar("cs_armor_body_abse", ".60", CVAR_ARCHIVE);
+	cs_player_armor_cap = gi.cvar("cs_player_armor_cap", "0", CVAR_ARCHIVE);
+	cs_player_armor_force_max = gi.cvar("cs_player_armor_force_max", "0", CVAR_ARCHIVE);	
+	
+	cs_power_armor_screen_dmgxcell = gi.cvar("cs_power_armor_screen_dmgxcell", "1", CVAR_ARCHIVE);
+	cs_power_armor_screen_dmg_mul = gi.cvar("cs_power_armor_screen_dmg_mul", "1", CVAR_ARCHIVE);
+	cs_power_armor_screen_dmg_div = gi.cvar("cs_power_armor_screen_dmg_div", "3", CVAR_ARCHIVE);
+	cs_power_armor_shield_dmgxcell = gi.cvar("cs_power_armor_shield_dmgxcell", "2", CVAR_ARCHIVE);
+	cs_power_armor_shield_dmg_mul = gi.cvar("cs_power_armor_shield_dmg_mul", "2", CVAR_ARCHIVE);
+	cs_power_armor_shield_dmg_div = gi.cvar("cs_power_armor_shield_dmg_div", "3", CVAR_ARCHIVE);
+	
+	cs_damage_modifier_hardplus = gi.cvar("cs_damage_modifier_hardplus", "1.0", CVAR_ARCHIVE);
+	cs_damage_modifier_hard = gi.cvar("cs_damage_modifier_hard", "1.0", CVAR_ARCHIVE);
+	cs_damage_modifier_medium = gi.cvar("cs_damage_modifier_medium", "1.0", CVAR_ARCHIVE);
+	cs_damage_modifier_easy = gi.cvar("cs_damage_modifier_easy", "0.5", CVAR_ARCHIVE);
+	cs_damage_sneak_attack = gi.cvar("cs_damage_sneak_attack", "2", CVAR_ARCHIVE);
+	
+	cs_weapon_blaster_damage_sp = gi.cvar("cs_weapon_blaster_damage_sp", "10", CVAR_ARCHIVE);
+	cs_weapon_blaster_damage_mp = gi.cvar("cs_weapon_blaster_damage_mp", "15", CVAR_ARCHIVE);
+	cs_weapon_blaster_speed = gi.cvar("cs_weapon_blaster_speed", "1000", CVAR_ARCHIVE);
+
+	cs_weapon_shotgun_bullets_sp = gi.cvar("cs_weapon_shotgun_bullets_sp", "12", CVAR_ARCHIVE);
+	cs_weapon_shotgun_bullets_mp = gi.cvar("cs_weapon_shotgun_bullets_mp", "12", CVAR_ARCHIVE);
+	cs_weapon_shotgun_damage = gi.cvar("cs_weapon_shotgun_damage", "4", CVAR_ARCHIVE);
+	cs_weapon_shotgun_kick = gi.cvar("cs_weapon_shotgun_kick", "8", CVAR_ARCHIVE);
+	cs_weapon_shotgun_hspread = gi.cvar("cs_weapon_shotgun_hspread", "1000", CVAR_ARCHIVE);
+	cs_weapon_shotgun_vspread = gi.cvar("cs_weapon_shotgun_vspread", "500", CVAR_ARCHIVE);
+	
+	cs_weapon_sshotgun_bullets = gi.cvar("cs_weapon_sshotgun_bullets_mp", "12", CVAR_ARCHIVE);
+	cs_weapon_sshotgun_damage = gi.cvar("cs_weapon_sshotgun_damage", "4", CVAR_ARCHIVE);
+	cs_weapon_sshotgun_kick = gi.cvar("cs_weapon_sshotgun_kick", "8", CVAR_ARCHIVE);
+	cs_weapon_sshotgun_hspread = gi.cvar("cs_weapon_sshotgun_hspread", "1000", CVAR_ARCHIVE);
+	cs_weapon_sshotgun_vspread = gi.cvar("cs_weapon_sshotgun_vspread", "500", CVAR_ARCHIVE);
+	cs_weapon_sshotgun_yaw = gi.cvar("cs_weapon_sshotgun_yaw", "5", CVAR_ARCHIVE);
+	
+	cs_weapon_machinegun_damage = gi.cvar("cs_weapon_machinegun_damage", "8", CVAR_ARCHIVE);
+	cs_weapon_machinegun_kick = gi.cvar("cs_weapon_machinegun_kick", "2", CVAR_ARCHIVE);
+	cs_weapon_machinegun_hspread = gi.cvar("cs_weapon_machinegun_hspread", "300", CVAR_ARCHIVE);
+	cs_weapon_machinegun_vspread = gi.cvar("cs_weapon_machinegun_vspread", "500", CVAR_ARCHIVE);
+	cs_weapon_machinegun_recoil = gi.cvar("cs_weapon_machinegun_recoil", "-1.5", CVAR_ARCHIVE);
+	
+	cs_weapon_chaingun_damage_sp = gi.cvar("cs_weapon_chaingun_damage_sp", "8", CVAR_ARCHIVE);
+	cs_weapon_chaingun_damage_mp = gi.cvar("cs_weapon_chaingun_damage_mp", "6", CVAR_ARCHIVE);
+	cs_weapon_chaingun_kick = gi.cvar("cs_weapon_chaingun_kick", "2", CVAR_ARCHIVE);
+	cs_weapon_chaingun_hspread = gi.cvar("cs_weapon_chaingun_hspread", "300", CVAR_ARCHIVE);
+	cs_weapon_chaingun_vspread = gi.cvar("cs_weapon_chaingun_vspread", "500", CVAR_ARCHIVE);
+	
+	cs_weapon_grenade_hand_damage_direct = gi.cvar("cs_weapon_grenade_hand_damage_direct", "125", CVAR_ARCHIVE);
+	cs_weapon_grenade_hand_damage_radius = gi.cvar("cs_weapon_grenade_hand_damage_radius", "165", CVAR_ARCHIVE);
+	cs_weapon_grenade_hand_speed_min = gi.cvar("cs_weapon_grenade_hand_speed_min", "400", CVAR_ARCHIVE);
+	cs_weapon_grenade_hand_speed_max = gi.cvar("cs_weapon_grenade_hand_speed_max", "800", CVAR_ARCHIVE);
+
+	cs_weapon_grenade_launcher_damage_direct = gi.cvar("cs_weapon_grenade_launcher_damage_direct", "120", CVAR_ARCHIVE);
+	cs_weapon_grenade_launcher_damage_radius = gi.cvar("cs_weapon_grenade_launcher_damage_radius", "160", CVAR_ARCHIVE);
+	cs_weapon_grenade_launcher_speed = gi.cvar("cs_weapon_grenade_launcher_speed", "600", CVAR_ARCHIVE);
+	
+	cs_weapon_rocket_launcher_damage_direct = gi.cvar("cs_weapon_rocket_launcher_damage_direct", "120", CVAR_ARCHIVE);
+	cs_weapon_rocket_launcher_damage_radius = gi.cvar("cs_weapon_rocket_launcher_damage_radius", "120", CVAR_ARCHIVE);
+	cs_weapon_rocket_launcher_radius = gi.cvar("cs_weapon_rocket_launcher_radius", "120", CVAR_ARCHIVE);
+	cs_weapon_rocket_launcher_speed = gi.cvar("cs_weapon_rocket_launcher_speed", "650", CVAR_ARCHIVE);
+	
+	cs_weapon_hblaster_damage_sp = gi.cvar("cs_weapon_hblaster_damage_sp", "20", CVAR_ARCHIVE);
+	cs_weapon_hblaster_damage_mp = gi.cvar("cs_weapon_hblaster_damage_mp", "15", CVAR_ARCHIVE);
+	cs_weapon_hblaster_speed = gi.cvar("cs_weapon_hblaster_speed", "1000", CVAR_ARCHIVE);
+	
+	cs_weapon_railgun_damage_sp = gi.cvar("cs_weapon_railgun_damage_sp", "150", CVAR_ARCHIVE);
+	cs_weapon_railgun_damage_mp = gi.cvar("cs_weapon_railgun_damage_mp", "100", CVAR_ARCHIVE);
+	cs_weapon_railgun_kick_sp = gi.cvar("cs_weapon_railgun_kick_sp", "250", CVAR_ARCHIVE);
+	cs_weapon_railgun_kick_mp = gi.cvar("cs_weapon_railgun_kick_mp", "200", CVAR_ARCHIVE);
+
+	cs_weapon_bfg_damage_effect_sp = gi.cvar("cs_weapon_bfg_damage_effect_sp", "500", CVAR_ARCHIVE);
+	cs_weapon_bfg_damage_effect_mp = gi.cvar("cs_weapon_bfg_damage_effect_mp", "200", CVAR_ARCHIVE);
+	cs_weapon_bfg_radius = gi.cvar("cs_weapon_bfg_radius", "1000", CVAR_ARCHIVE);
+	cs_weapon_bfg_speed = gi.cvar("cs_weapon_bfg_speed", "400", CVAR_ARCHIVE);	
+	
+	cs_weapon_bfg_damage_direct = gi.cvar("cs_weapon_bfg_damage_direct", "200", CVAR_ARCHIVE);
+	cs_weapon_bfg_damage_radius = gi.cvar("cs_weapon_bfg_damage_radius", "200", CVAR_ARCHIVE);
+	cs_weapon_bfg_damage_laser_sp = gi.cvar("cs_weapon_bfg_damage_laser_SP", "10", CVAR_ARCHIVE);
+	cs_weapon_bfg_damage_laser_mp = gi.cvar("cs_weapon_bfg_damage_laser_MP", "5", CVAR_ARCHIVE);	
 
 	/* items */
 	InitItems();
