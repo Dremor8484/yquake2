@@ -552,6 +552,146 @@ extern cvar_t *sv_maplist;
 extern cvar_t *aimfix;
 extern cvar_t *g_machinegun_norecoil;
 
+extern cvar_t *sv_custom_settings;
+
+extern cvar_t *cs_player_health_start;
+extern cvar_t *cs_player_health_max;
+
+extern cvar_t *cs_player_ammo_shells;
+extern cvar_t *cs_player_ammo_bullets;
+extern cvar_t *cs_player_ammo_grenades;
+extern cvar_t *cs_player_ammo_rockets;
+extern cvar_t *cs_player_ammo_slugs;
+extern cvar_t *cs_player_ammo_cells;
+
+extern cvar_t *cs_bandolier_ammo_shells;
+extern cvar_t *cs_bandolier_ammo_bullets;
+extern cvar_t *cs_bandolier_ammo_grenades;
+extern cvar_t *cs_bandolier_ammo_rockets;
+extern cvar_t *cs_bandolier_ammo_slugs;
+extern cvar_t *cs_bandolier_ammo_cells;
+
+extern cvar_t *cs_ammopack_ammo_shells;
+extern cvar_t *cs_ammopack_ammo_bullets;
+extern cvar_t *cs_ammopack_ammo_grenades;
+extern cvar_t *cs_ammopack_ammo_rockets;
+extern cvar_t *cs_ammopack_ammo_slugs;
+extern cvar_t *cs_ammopack_ammo_cells;
+
+extern cvar_t *cs_silencer_shots_quantity;
+extern cvar_t *cs_quad_duration;
+extern cvar_t *cs_rebreather_duration;
+extern cvar_t *cs_environmentsuit_duration;
+extern cvar_t *cs_invulnerability_duration;
+extern cvar_t *cs_powerup_quantity_easy;
+extern cvar_t *cs_powerup_quantity_medium;
+extern cvar_t *cs_powerup_quantity_hard;
+extern cvar_t *cs_powerup_quantity_hardplus;
+
+extern cvar_t *cs_health_small_val;
+extern cvar_t *cs_health_val;
+extern cvar_t *cs_health_large_val;
+extern cvar_t *cs_health_mega_val;
+extern cvar_t *cs_health_mega_decay;
+extern cvar_t *cs_adrenaline_val;
+extern cvar_t *cs_adrenaline_heal;
+extern cvar_t *cs_ancienthead_val;
+extern cvar_t *cs_ancienthead_heal;
+extern cvar_t *cs_player_health_cap;
+extern cvar_t *cs_player_health_force_max;
+
+extern cvar_t *cs_armor_shard_val;
+extern cvar_t *cs_armor_jacket_val;
+extern cvar_t *cs_armor_combat_val;
+extern cvar_t *cs_armor_body_val;
+extern cvar_t *cs_armor_jacket_max;
+extern cvar_t *cs_armor_combat_max;
+extern cvar_t *cs_armor_body_max;
+extern cvar_t *cs_armor_jacket_absp;
+extern cvar_t *cs_armor_combat_absp;
+extern cvar_t *cs_armor_body_absp;
+extern cvar_t *cs_armor_jacket_abse;
+extern cvar_t *cs_armor_combat_abse;
+extern cvar_t *cs_armor_body_abse;
+extern cvar_t *cs_player_armor_cap;
+extern cvar_t *cs_player_armor_force_max;
+
+extern cvar_t *cs_power_armor_screen_dmgxcell;
+extern cvar_t *cs_power_armor_screen_dmg_mul;
+extern cvar_t *cs_power_armor_screen_dmg_div;
+extern cvar_t *cs_power_armor_shield_dmgxcell;
+extern cvar_t *cs_power_armor_shield_dmg_mul;
+extern cvar_t *cs_power_armor_shield_dmg_div;
+
+extern cvar_t *cs_damage_modifier_hardplus;
+extern cvar_t *cs_damage_modifier_hard;
+extern cvar_t *cs_damage_modifier_medium;
+extern cvar_t *cs_damage_modifier_easy;
+extern cvar_t *cs_damage_sneak_attack;
+
+extern cvar_t *cs_weapon_blaster_damage_sp;
+extern cvar_t *cs_weapon_blaster_damage_mp;
+extern cvar_t *cs_weapon_blaster_speed;
+
+extern cvar_t *cs_weapon_shotgun_bullets_sp;
+extern cvar_t *cs_weapon_shotgun_bullets_mp;
+extern cvar_t *cs_weapon_shotgun_damage;
+extern cvar_t *cs_weapon_shotgun_kick;
+extern cvar_t *cs_weapon_shotgun_hspread;
+extern cvar_t *cs_weapon_shotgun_vspread;
+
+extern cvar_t *cs_weapon_sshotgun_bullets;
+extern cvar_t *cs_weapon_sshotgun_damage;
+extern cvar_t *cs_weapon_sshotgun_kick;
+extern cvar_t *cs_weapon_sshotgun_hspread;
+extern cvar_t *cs_weapon_sshotgun_vspread;
+extern cvar_t *cs_weapon_sshotgun_yaw;
+
+extern cvar_t *cs_weapon_machinegun_damage;
+extern cvar_t *cs_weapon_machinegun_kick;
+extern cvar_t *cs_weapon_machinegun_hspread;
+extern cvar_t *cs_weapon_machinegun_vspread;
+extern cvar_t *cs_weapon_machinegun_recoil;
+
+extern cvar_t *cs_weapon_chaingun_damage_sp;
+extern cvar_t *cs_weapon_chaingun_damage_mp;
+extern cvar_t *cs_weapon_chaingun_kick;
+extern cvar_t *cs_weapon_chaingun_hspread;
+extern cvar_t *cs_weapon_chaingun_vspread;
+
+extern cvar_t *cs_weapon_grenade_hand_damage_direct;
+extern cvar_t *cs_weapon_grenade_hand_damage_radius;
+extern cvar_t *cs_weapon_grenade_hand_speed_min;
+extern cvar_t *cs_weapon_grenade_hand_speed_max;
+
+extern cvar_t *cs_weapon_grenade_launcher_damage_direct;
+extern cvar_t *cs_weapon_grenade_launcher_damage_radius;
+extern cvar_t *cs_weapon_grenade_launcher_speed;
+
+extern cvar_t *cs_weapon_rocket_launcher_damage_direct;
+extern cvar_t *cs_weapon_rocket_launcher_damage_radius;
+extern cvar_t *cs_weapon_rocket_launcher_radius;
+extern cvar_t *cs_weapon_rocket_launcher_speed;
+
+extern cvar_t *cs_weapon_hblaster_damage_sp;
+extern cvar_t *cs_weapon_hblaster_damage_mp;
+extern cvar_t *cs_weapon_hblaster_speed;
+
+extern cvar_t *cs_weapon_railgun_damage_sp;
+extern cvar_t *cs_weapon_railgun_damage_mp;
+extern cvar_t *cs_weapon_railgun_kick_sp;
+extern cvar_t *cs_weapon_railgun_kick_mp;
+
+extern cvar_t *cs_weapon_bfg_damage_effect_sp;
+extern cvar_t *cs_weapon_bfg_damage_effect_mp;
+extern cvar_t *cs_weapon_bfg_radius;
+extern cvar_t *cs_weapon_bfg_speed;
+
+extern cvar_t *cs_weapon_bfg_damage_direct;
+extern cvar_t *cs_weapon_bfg_damage_radius;
+extern cvar_t *cs_weapon_bfg_damage_laser_sp;
+extern cvar_t *cs_weapon_bfg_damage_laser_mp;
+
 #define world (&g_edicts[0])
 
 /* item spawnflags */
