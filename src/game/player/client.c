@@ -989,6 +989,19 @@ InitClientPersistant(gclient_t *client)
 	client->pers.max_grenades = 50;
 	client->pers.max_cells = 200;
 	client->pers.max_slugs = 50;
+	
+	if (sv_custom_settings->value)
+	{
+		client->pers.health = cs_player_health_start->value; //100
+		client->pers.max_health = cs_player_health_max->value; //100
+
+		client->pers.max_shells = cs_player_ammo_shells->value; //100
+		client->pers.max_bullets = cs_player_ammo_bullets->value; //200
+		client->pers.max_grenades = cs_player_ammo_grenades->value; //50
+		client->pers.max_rockets = cs_player_ammo_rockets->value; //50
+		client->pers.max_slugs = cs_player_ammo_slugs->value; //50
+		client->pers.max_cells = cs_player_ammo_cells->value; //200		
+	}
 
 	client->pers.connected = true;
 }
