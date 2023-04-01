@@ -204,7 +204,6 @@ InitGame(void)
 
 	/* latched vars */
 	sv_cheats = gi.cvar("cheats", "0", CVAR_SERVERINFO | CVAR_LATCH);
-	sv_custom_settings = gi.cvar("custom_settings", "0", CVAR_SERVERINFO | CVAR_LATCH);
 	gi.cvar("gamename", GAMEVERSION, CVAR_SERVERINFO | CVAR_LATCH);
 	gi.cvar("gamedate", BUILD_DATE, CVAR_SERVERINFO | CVAR_LATCH);
 	maxclients = gi.cvar("maxclients", "4", CVAR_SERVERINFO | CVAR_LATCH);
@@ -248,6 +247,8 @@ InitGame(void)
 	g_machinegun_norecoil = gi.cvar("g_machinegun_norecoil", "0", CVAR_ARCHIVE);
 	
 	/* custom settings */
+	sv_custom_settings = gi.cvar("custom_settings", "0", CVAR_SERVERINFO | CVAR_LATCH);
+	
 	cs_player_health_start = gi.cvar("cs_player_health_start", "100", CVAR_ARCHIVE);
 	cs_player_health_max = gi.cvar("cs_player_health_max", "100", CVAR_ARCHIVE);
 	
@@ -327,8 +328,7 @@ InitGame(void)
 	cs_weapon_blaster_damage_mp = gi.cvar("cs_weapon_blaster_damage_mp", "15", CVAR_ARCHIVE);
 	cs_weapon_blaster_speed = gi.cvar("cs_weapon_blaster_speed", "1000", CVAR_ARCHIVE);
 
-	cs_weapon_shotgun_bullets_sp = gi.cvar("cs_weapon_shotgun_bullets_sp", "12", CVAR_ARCHIVE);
-	cs_weapon_shotgun_bullets_mp = gi.cvar("cs_weapon_shotgun_bullets_mp", "12", CVAR_ARCHIVE);
+	cs_weapon_shotgun_bullets = gi.cvar("cs_weapon_shotgun_bullets", "12", CVAR_ARCHIVE);
 	cs_weapon_shotgun_damage = gi.cvar("cs_weapon_shotgun_damage", "4", CVAR_ARCHIVE);
 	cs_weapon_shotgun_kick = gi.cvar("cs_weapon_shotgun_kick", "8", CVAR_ARCHIVE);
 	cs_weapon_shotgun_hspread = gi.cvar("cs_weapon_shotgun_hspread", "1000", CVAR_ARCHIVE);
