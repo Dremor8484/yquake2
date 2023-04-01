@@ -1122,19 +1122,6 @@ Blaster_Fire(edict_t *ent, vec3_t g_offset, int damage,
 		return;
 	}
 
-	if (is_quad)
-	{
-		damage *= 4;
-	}
-
-	AngleVectors(ent->client->v_angle, forward, right, NULL);
-	VectorSet(offset, 24, 8, ent->viewheight - 8);
-	VectorAdd(offset, g_offset, offset);
-	P_ProjectSource(ent, offset, forward, right, start);
-
-	VectorScale(forward, -2, ent->client->kick_origin);
-	ent->client->kick_angles[0] = -1;
-	
 	int speed = 1000;
 	if (sv_custom_settings->value)
 	{
@@ -1163,6 +1150,19 @@ Blaster_Fire(edict_t *ent, vec3_t g_offset, int damage,
 			speed = cs_weapon_hblaster_speed->value;
 		}
 	}
+
+	if (is_quad)
+	{
+		damage *= 4;
+	}
+
+	AngleVectors(ent->client->v_angle, forward, right, NULL);
+	VectorSet(offset, 24, 8, ent->viewheight - 8);
+	VectorAdd(offset, g_offset, offset);
+	P_ProjectSource(ent, offset, forward, right, start);
+
+	VectorScale(forward, -2, ent->client->kick_origin);
+	ent->client->kick_angles[0] = -1;
 
 	fire_blaster(ent, start, forward, damage, speed, effect, hyper);
 
@@ -1687,20 +1687,12 @@ weapon_shotgun_fire(edict_t *ent)
 	VectorSet(offset, 0, 8, ent->viewheight - 8);
 	P_ProjectSource(ent, offset, forward, right, start);
 
-	int weapon_shotgun_bullets_sp = DEFAULT_SHOTGUN_COUNT; //12
-	int weapon_shotgun_bullets_mp = DEFAULT_DEATHMATCH_SHOTGUN_COUNT; //12
+	int weapon_shotgun_bullets = DEFAULT_SHOTGUN_COUNT; //12
 	int hspread = DEFAULT_SHOTGUN_HSPREAD; //1000
 	int vspread = DEFAULT_SHOTGUN_VSPREAD; //500
 	if (sv_custom_settings->value)
 	{
-		if (deathmatch->value)
-		{
-			weapon_shotgun_bullets_mp = cs_weapon_shotgun_bullets_mp->value;
-		}
-		else
-		{
-			weapon_shotgun_bullets_sp = cs_weapon_shotgun_bullets_sp->value;
-		}
+		weapon_shotgun_bullets = cs_weapon_shotgun_bullets->value;
 		damage = cs_weapon_shotgun_damage->value;
 		kick = cs_weapon_shotgun_kick->value;
 		hspread = cs_weapon_shotgun_hspread->value;
@@ -1713,18 +1705,8 @@ weapon_shotgun_fire(edict_t *ent)
 		kick *= 4;
 	}
 
-	if (deathmatch->value)
-	{
-		fire_shotgun(ent, start, forward, damage, kick,
-				hspread, vspread, weapon_shotgun_bullets_mp,
-				MOD_SHOTGUN);
-	}
-	else
-	{
-		fire_shotgun(ent, start, forward, damage, kick,
-				hspread, vspread, weapon_shotgun_bullets_sp,
-				MOD_SHOTGUN);
-	}
+	fire_shotgun(ent, start, forward, damage, kick, hspread,
+			vspread, weapon_shotgun_bullets, MOD_SHOTGUN);
 
 	/* send muzzle flash */
 	gi.WriteByte(svc_muzzleflash);
@@ -1995,6 +1977,14 @@ weapon_bfg_fire(edict_t *ent)
 		PlayerNoise(ent, start, PNOISE_WEAPON);
 		return;
 	}
+
+	/* cells can go down during windup (from power armor hits), so
+	   check again and abort firing if we don't have enough now */
+	if (ent->client->pers.inventory[ent->client->ammo_index] < 50)
+	{
+		ent->client->ps.gunframe++;
+		return;
+	}
 	
 	int speed = 400;
 	if (sv_custom_settings->value)
@@ -2009,14 +1999,6 @@ weapon_bfg_fire(edict_t *ent)
 		}
 		damage_radius = cs_weapon_bfg_radius->value;
 		speed = cs_weapon_bfg_speed->value;
-	}
-
-	/* cells can go down during windup (from power armor hits), so
-	   check again and abort firing if we don't have enough now */
-	if (ent->client->pers.inventory[ent->client->ammo_index] < 50)
-	{
-		ent->client->ps.gunframe++;
-		return;
 	}
 
 	if (is_quad)
