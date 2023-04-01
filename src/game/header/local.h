@@ -633,8 +633,7 @@ extern cvar_t *cs_weapon_blaster_damage_sp;
 extern cvar_t *cs_weapon_blaster_damage_mp;
 extern cvar_t *cs_weapon_blaster_speed;
 
-extern cvar_t *cs_weapon_shotgun_bullets_sp;
-extern cvar_t *cs_weapon_shotgun_bullets_mp;
+extern cvar_t *cs_weapon_shotgun_bullets;
 extern cvar_t *cs_weapon_shotgun_damage;
 extern cvar_t *cs_weapon_shotgun_kick;
 extern cvar_t *cs_weapon_shotgun_hspread;
