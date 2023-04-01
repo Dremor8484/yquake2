@@ -170,8 +170,7 @@ cvar_t *cs_weapon_blaster_damage_sp;
 cvar_t *cs_weapon_blaster_damage_mp;
 cvar_t *cs_weapon_blaster_speed;
 
-cvar_t *cs_weapon_shotgun_bullets_sp;
-cvar_t *cs_weapon_shotgun_bullets_mp;
+cvar_t *cs_weapon_shotgun_bullets;
 cvar_t *cs_weapon_shotgun_damage;
 cvar_t *cs_weapon_shotgun_kick;
 cvar_t *cs_weapon_shotgun_hspread;
