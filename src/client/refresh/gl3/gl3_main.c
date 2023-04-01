@@ -97,6 +97,7 @@ cvar_t *gl3_particle_size;
 cvar_t *gl3_particle_fade_factor;
 cvar_t *gl3_particle_square;
 cvar_t *gl3_colorlight;
+cvar_t *gl_polyblend;
 
 cvar_t *gl_lefthand;
 cvar_t *r_gunfov;
@@ -120,7 +121,7 @@ cvar_t *r_novis;
 cvar_t *r_speeds;
 cvar_t *gl_finish;
 
-cvar_t *gl_cull;
+cvar_t *r_cull;
 cvar_t *gl_zfix;
 cvar_t *r_fullbright;
 cvar_t *r_modulate;
@@ -129,6 +130,8 @@ cvar_t *gl_shadows;
 cvar_t *gl3_debugcontext;
 cvar_t *gl3_usebigvbo;
 cvar_t *r_fixsurfsky;
+cvar_t *r_palettedtexture;
+cvar_t *r_validation;
 cvar_t *gl3_usefbo;
 
 // Yaw-Pitch-Roll
@@ -217,6 +220,7 @@ GL3_Register(void)
 	gl3_particle_square = ri.Cvar_Get("gl3_particle_square", "0", CVAR_ARCHIVE);
 	// if set to 0, lights (from lightmaps, dynamic lights and on models) are white instead of colored
 	gl3_colorlight = ri.Cvar_Get("gl3_colorlight", "1", CVAR_ARCHIVE);
+	gl_polyblend = ri.Cvar_Get("gl_polyblend", "1", CVAR_ARCHIVE);
 
 	//  0: use lots of calls to glBufferData()
 	//  1: reduce calls to glBufferData() with one big VBO (see GL3_BufferAndDraw3D())
@@ -228,6 +232,8 @@ GL3_Register(void)
 	r_drawworld = ri.Cvar_Get("r_drawworld", "1", 0);
 	r_fullbright = ri.Cvar_Get("r_fullbright", "0", 0);
 	r_fixsurfsky = ri.Cvar_Get("r_fixsurfsky", "0", CVAR_ARCHIVE);
+	r_palettedtexture = ri.Cvar_Get("r_palettedtexture", "0", 0);
+	r_validation = ri.Cvar_Get("r_validation", "0", CVAR_ARCHIVE);
 
 	/* don't bilerp characters and crosshairs */
 	gl_nolerp_list = ri.Cvar_Get("r_nolerp_list", "pics/conchars.pcx pics/ch1.pcx pics/ch2.pcx pics/ch3.pcx", CVAR_ARCHIVE);
@@ -256,7 +262,7 @@ GL3_Register(void)
 	r_modulate = ri.Cvar_Get("r_modulate", "1", CVAR_ARCHIVE);
 	gl_zfix = ri.Cvar_Get("gl_zfix", "0", 0);
 	r_clear = ri.Cvar_Get("r_clear", "0", 0);
-	gl_cull = ri.Cvar_Get("gl_cull", "1", 0);
+	r_cull = ri.Cvar_Get("r_cull", "1", 0);
 	r_lockpvs = ri.Cvar_Get("r_lockpvs", "0", 0);
 	r_novis = ri.Cvar_Get("r_novis", "0", 0);
 	r_speeds = ri.Cvar_Get("r_speeds", "0", 0);
@@ -296,7 +302,6 @@ GL3_Register(void)
 	//gl_zfix = ri.Cvar_Get("gl_zfix", "0", 0);
 	//gl_finish = ri.Cvar_Get("gl_finish", "0", CVAR_ARCHIVE);
 	r_clear = ri.Cvar_Get("r_clear", "0", 0);
-//	gl_cull = ri.Cvar_Get("gl_cull", "1", 0);
 	//gl1_flashblend = ri.Cvar_Get("gl1_flashblend", "0", 0);
 
 	//gl_texturemode = ri.Cvar_Get("gl_texturemode", "GL_LINEAR_MIPMAP_NEAREST", CVAR_ARCHIVE);
@@ -452,6 +457,8 @@ enum { QGL_POINT_SPRITE = 0x8861 };
 static qboolean
 GL3_Init(void)
 {
+	byte *colormap;
+
 	Swap_Init(); // FIXME: for fucks sake, this doesn't have to be done at runtime!
 
 	R_Printf(PRINT_ALL, "Refresh: " REF_VERSION "\n");
@@ -466,7 +473,8 @@ GL3_Init(void)
 		return false;
 	}
 
-	GL3_Draw_GetPalette();
+	GetPCXPalette (&colormap, d_8to24table);
+	free(colormap);
 
 	GL3_Register();
 
@@ -814,6 +822,7 @@ GL3_DrawSpriteModel(entity_t *e, gl3model_t *currentmodel)
 	dsprframe_t *frame;
 	float *up, *right;
 	dsprite_t *psprite;
+	gl3image_t *skin;
 
 	/* don't even bother culling, because it's just
 	   a single polygon without a surface cache */
@@ -837,7 +846,13 @@ GL3_DrawSpriteModel(entity_t *e, gl3model_t *currentmodel)
 		GL3_UpdateUBO3D();
 	}
 
-	GL3_Bind(currentmodel->skins[e->frame]->texnum);
+	skin = currentmodel->skins[e->frame];
+	if (!skin)
+	{
+		skin = gl3_notexture; /* fallback... */
+	}
+
+	GL3_Bind(skin->texnum);
 
 	if (alpha == 1.0)
 	{
@@ -1007,7 +1022,7 @@ GL3_DrawParticles(void)
 		glDisable(GL_BLEND);
 		glDepthMask(GL_TRUE);
 #ifdef YQ2_GL3_GLES
-		if(gl_cull->value != 0.0f)
+		if(r_cull->value != 0.0f)
 			glEnable(GL_CULL_FACE);
 #else
 		glDisable(GL_PROGRAM_POINT_SIZE);
@@ -1123,51 +1138,6 @@ GL3_DrawEntitiesOnList(void)
 
 }
 
-static int
-SignbitsForPlane(cplane_t *out)
-{
-	int bits, j;
-
-	/* for fast box on planeside test */
-	bits = 0;
-
-	for (j = 0; j < 3; j++)
-	{
-		if (out->normal[j] < 0)
-		{
-			bits |= 1 << j;
-		}
-	}
-
-	return bits;
-}
-
-static void
-SetFrustum(void)
-{
-	int i;
-
-	/* rotate VPN right by FOV_X/2 degrees */
-	RotatePointAroundVector(frustum[0].normal, vup, vpn,
-			-(90 - gl3_newrefdef.fov_x / 2));
-	/* rotate VPN left by FOV_X/2 degrees */
-	RotatePointAroundVector(frustum[1].normal,
-			vup, vpn, 90 - gl3_newrefdef.fov_x / 2);
-	/* rotate VPN up by FOV_X/2 degrees */
-	RotatePointAroundVector(frustum[2].normal,
-			vright, vpn, 90 - gl3_newrefdef.fov_y / 2);
-	/* rotate VPN down by FOV_X/2 degrees */
-	RotatePointAroundVector(frustum[3].normal, vright, vpn,
-			-(90 - gl3_newrefdef.fov_y / 2));
-
-	for (i = 0; i < 4; i++)
-	{
-		frustum[i].type = PLANE_ANYZ;
-		frustum[i].dist = DotProduct(gl3_origin, frustum[i].normal);
-		frustum[i].signbits = SignbitsForPlane(&frustum[i]);
-	}
-}
-
 static void
 SetupFrame(void)
 {
@@ -1184,9 +1154,15 @@ SetupFrame(void)
 	/* current viewcluster */
 	if (!(gl3_newrefdef.rdflags & RDF_NOWORLDMODEL))
 	{
+		if (!gl3_worldmodel)
+		{
+			ri.Sys_Error(ERR_DROP, "%s: bad world model", __func__);
+			return;
+		}
+
 		gl3_oldviewcluster = gl3_viewcluster;
 		gl3_oldviewcluster2 = gl3_viewcluster2;
-		leaf = GL3_Mod_PointInLeaf(gl3_origin, gl3_worldmodel);
+		leaf = Mod_PointInLeaf(gl3_origin, gl3_worldmodel->nodes);
 		gl3_viewcluster = gl3_viewcluster2 = leaf->cluster;
 
 		/* check above and below so crossing solid water doesn't draw wrong */
@@ -1197,7 +1173,7 @@ SetupFrame(void)
 
 			VectorCopy(gl3_origin, temp);
 			temp[2] -= 16;
-			leaf = GL3_Mod_PointInLeaf(temp, gl3_worldmodel);
+			leaf = Mod_PointInLeaf(temp, gl3_worldmodel->nodes);
 
 			if (!(leaf->contents & CONTENTS_SOLID) &&
 				(leaf->cluster != gl3_viewcluster2))
@@ -1212,7 +1188,7 @@ SetupFrame(void)
 
 			VectorCopy(gl3_origin, temp);
 			temp[2] += 16;
-			leaf = GL3_Mod_PointInLeaf(temp, gl3_worldmodel);
+			leaf = Mod_PointInLeaf(temp, gl3_worldmodel->nodes);
 
 			if (!(leaf->contents & CONTENTS_SOLID) &&
 				(leaf->cluster != gl3_viewcluster2))
@@ -1480,7 +1456,7 @@ SetupGL(void)
 	GL3_UpdateUBO3D();
 
 	/* set drawing parms */
-	if (gl_cull->value)
+	if (r_cull->value)
 	{
 		glEnable(GL_CULL_FACE);
 	}
@@ -1637,7 +1613,8 @@ GL3_RenderView(refdef_t *fd)
 
 	SetupFrame();
 
-	SetFrustum();
+	R_SetFrustum(vup, vpn, vright, gl3_origin,
+		gl3_newrefdef.fov_x, gl3_newrefdef.fov_y, frustum);
 
 	SetupGL();
 

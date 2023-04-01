@@ -37,40 +37,9 @@ BRUSH MODELS
 ==============================================================================
 */
 
-
 //
 // in memory representation
 //
-typedef struct
-{
-	vec3_t		position;
-} mvertex_t;
-
-
-// FIXME: differentiate from texinfo SURF_ flags
-#define	SURF_PLANEBACK		0x02
-#define	SURF_DRAWSKY		0x04	// sky brush face
-#define SURF_DRAWTURB		0x10
-#define SURF_DRAWBACKGROUND	0x40
-#define SURF_DRAWSKYBOX		0x80	// sky box
-
-#define SURF_FLOW		0x100
-
-typedef struct
-{
-	unsigned short	v[2];
-	unsigned int	cachededgeoffset;
-} medge_t;
-
-typedef struct mtexinfo_s
-{
-	float		vecs[2][4];
-	float		mipadjust;
-	image_t		*image;
-	int		flags;
-	int		numframes;
-	struct mtexinfo_s	*next;		// animation chain
-} mtexinfo_t;
 
 typedef struct msurface_s
 {
@@ -99,46 +68,6 @@ typedef struct msurface_s
 
 	struct msurface_s *nextalphasurface;
 } msurface_t;
-
-
-#define	CONTENTS_NODE	-1
-typedef struct mnode_s
-{
-	// common with leaf
-	int		contents;	// CONTENTS_NODE, to differentiate from leafs
-	int		visframe;	// node needs to be traversed if current
-
-	short		minmaxs[6];	// for bounding box culling
-
-	struct mnode_s	*parent;
-
-	// node specific
-	cplane_t	*plane;
-	struct mnode_s	*children[2];
-
-	unsigned short	firstsurface;
-	unsigned short	numsurfaces;
-} mnode_t;
-
-typedef struct mleaf_s
-{
-	// common with node
-	int		contents;	// wil be something other than CONTENTS_NODE
-	int		visframe;	// node needs to be traversed if current
-
-	short		minmaxs[6];	// for bounding box culling
-
-	struct mnode_s	*parent;
-
-	// leaf specific
-	int		cluster;
-	int		area;
-
-	msurface_t	**firstmarksurface;
-	int		nummarksurfaces;
-	int		key;		// BSP sequence number for leaf's contents
-} mleaf_t;
-
 
 //===================================================================
 

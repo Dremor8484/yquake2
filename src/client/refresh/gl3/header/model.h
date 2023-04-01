@@ -27,20 +27,6 @@
 #ifndef SRC_CLIENT_REFRESH_GL3_HEADER_MODEL_H_
 #define SRC_CLIENT_REFRESH_GL3_HEADER_MODEL_H_
 
-enum {
-	SIDE_FRONT = 0,
-	SIDE_BACK = 1,
-	SIDE_ON = 2
-};
-
-enum {
-	SURF_PLANEBACK = 2,
-	SURF_DRAWSKY = 4,
-	SURF_DRAWTURB = 0x10,
-	SURF_DRAWBACKGROUND = 0x40,
-	SURF_UNDERWATER = 0x80
-};
-
 // used for vertex array elements when drawing brushes, sprites, sky and more
 // (ok, it has the layout used for rendering brushes, but is not used there)
 typedef struct gl3_3D_vtx_s {
@@ -59,35 +45,6 @@ typedef struct gl3_alias_vtx_s {
 } gl3_alias_vtx_t;
 
 /* in memory representation */
-typedef struct
-{
-	vec3_t position;
-} mvertex_t;
-
-typedef struct
-{
-	vec3_t mins, maxs;
-	vec3_t origin; /* for sounds or lights */
-	float radius;
-	int headnode;
-	int visleafs; /* not including the solid leaf 0 */
-	int firstface, numfaces;
-} mmodel_t;
-
-typedef struct
-{
-	unsigned short v[2];
-	unsigned int cachededgeoffset;
-} medge_t;
-
-typedef struct mtexinfo_s
-{
-	float vecs[2][4];
-	int flags;
-	int numframes;
-	struct mtexinfo_s *next; /* animation chain */
-	gl3image_t *image;
-} mtexinfo_t;
 
 typedef struct glpoly_s
 {
@@ -130,42 +87,6 @@ typedef struct msurface_s
 	//float cached_light[MAXLIGHTMAPS];       /* values currently used in lightmap */
 	byte *samples;                          /* [numstyles*surfsize] */
 } msurface_t;
-
-typedef struct mnode_s
-{
-	/* common with leaf */
-	int contents;               /* -1, to differentiate from leafs */
-	int visframe;               /* node needs to be traversed if current */
-
-	float minmaxs[6];           /* for bounding box culling */
-
-	struct mnode_s *parent;
-
-	/* node specific */
-	cplane_t *plane;
-	struct mnode_s *children[2];
-
-	unsigned short firstsurface;
-	unsigned short numsurfaces;
-} mnode_t;
-
-typedef struct mleaf_s
-{
-	/* common with node */
-	int contents;               /* wil be a negative contents number */
-	int visframe;               /* node needs to be traversed if current */
-
-	float minmaxs[6];           /* for bounding box culling */
-
-	struct mnode_s *parent;
-
-	/* leaf specific */
-	int cluster;
-	int area;
-
-	msurface_t **firstmarksurface;
-	int nummarksurfaces;
-} mleaf_t;
 
 /* Whole model */
 

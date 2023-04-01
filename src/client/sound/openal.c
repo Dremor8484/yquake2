@@ -514,7 +514,8 @@ AL_SetReverb(int reverb_effect)
 	qalEffectf(ReverbEffect[QAL_REVERB_EFFECT], AL_REVERB_ROOM_ROLLOFF_FACTOR, reverb.flRoomRolloffFactor);
 	qalEffecti(ReverbEffect[QAL_REVERB_EFFECT], AL_REVERB_DECAY_HFLIMIT, reverb.iDecayHFLimit);
 
-	qalAuxiliaryEffectSloti(QAL_REVERB_EFFECT, AL_EFFECTSLOT_EFFECT, ReverbEffect[QAL_REVERB_EFFECT]);
+	qalAuxiliaryEffectSloti(ReverbEffectSlot[QAL_REVERB_EFFECT],
+		AL_EFFECTSLOT_EFFECT, ReverbEffect[QAL_REVERB_EFFECT]);
 }
 
 /*
@@ -854,11 +855,12 @@ AL_AddLoopSounds(void)
 	int num;
 	entity_state_t *ent;
 
-	if ((cls.state != ca_active) || cl_paused->value || !s_ambient->value)
+	if ((cls.state != ca_active) || (cl_paused->value && cl_audiopaused->value) || !s_ambient->value)
 	{
 		return;
 	}
 
+	memset(&sounds, 0, sizeof(int) * MAX_EDICTS);
 	S_BuildSoundList(sounds);
 
 	for (i = 0; i < cl.frame.num_entities; i++)
@@ -1199,8 +1201,9 @@ AL_Underwater()
 	for (i = 0; i < s_numchannels; i++)
 	{
 		qalSourcei(s_srcnums[i], AL_DIRECT_FILTER, underwaterFilter);
-		AL_SetReverb(22);
 	}
+
+	AL_SetReverb(22);
 }
 
 /*
@@ -1223,8 +1226,9 @@ AL_Overwater()
 	for (i = 0; i < s_numchannels; i++)
 	{
 		qalSourcei(s_srcnums[i], AL_DIRECT_FILTER, AL_FILTER_NULL);
-		AL_SetReverb(s_reverb_preset->value);
 	}
+
+	AL_SetReverb(s_reverb_preset->value);
 }
 
 /* ----------------------------------------------------------------- */
@@ -1304,7 +1308,6 @@ AL_InitReverbEffect(void)
 		return;
 
 	qalGenEffects(QAL_EFX_MAX, ReverbEffect);
-
 	if (qalGetError() != AL_NO_ERROR)
 	{
 		Com_Printf("Couldn't generate an OpenAL effect!\n");
@@ -1312,6 +1315,12 @@ AL_InitReverbEffect(void)
 	}
 
 	qalGenAuxiliaryEffectSlots(QAL_EFX_MAX, ReverbEffectSlot);
+	if (qalGetError() != AL_NO_ERROR)
+	{
+		Com_Printf("Couldn't generate an OpenAL auxiliary effect slot!\n");
+		return;
+	}
+
 	qalEffecti(ReverbEffect[QAL_REVERB_EFFECT], AL_EFFECT_TYPE, AL_EFFECT_REVERB);
 	AL_SetReverb(s_reverb_preset->value);
 }

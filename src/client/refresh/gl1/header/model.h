@@ -27,47 +27,9 @@
 #ifndef REF_MODEL_H
 #define REF_MODEL_H
 
-#define SIDE_FRONT 0
-#define SIDE_BACK 1
-#define SIDE_ON 2
-
-#define SURF_PLANEBACK 2
-#define SURF_DRAWSKY 4
-#define SURF_DRAWTURB 0x10
-#define SURF_DRAWBACKGROUND 0x40
-#define SURF_UNDERWATER 0x80
 #define VERTEXSIZE 7
 
 /* in memory representation */
-typedef struct
-{
-	vec3_t position;
-} mvertex_t;
-
-typedef struct
-{
-	vec3_t mins, maxs;
-	vec3_t origin; /* for sounds or lights */
-	float radius;
-	int headnode;
-	int visleafs; /* not including the solid leaf 0 */
-	int firstface, numfaces;
-} mmodel_t;
-
-typedef struct
-{
-	unsigned short v[2];
-	unsigned int cachededgeoffset;
-} medge_t;
-
-typedef struct mtexinfo_s
-{
-	float vecs[2][4];
-	int flags;
-	int numframes;
-	struct mtexinfo_s *next; /* animation chain */
-	image_t *image;
-} mtexinfo_t;
 
 typedef struct glpoly_s
 {
@@ -109,42 +71,6 @@ typedef struct msurface_s
 	float cached_light[MAXLIGHTMAPS];       /* values currently used in lightmap */
 	byte *samples;                          /* [numstyles*surfsize] */
 } msurface_t;
-
-typedef struct mnode_s
-{
-	/* common with leaf */
-	int contents;               /* -1, to differentiate from leafs */
-	int visframe;               /* node needs to be traversed if current */
-
-	float minmaxs[6];           /* for bounding box culling */
-
-	struct mnode_s *parent;
-
-	/* node specific */
-	cplane_t *plane;
-	struct mnode_s *children[2];
-
-	unsigned short firstsurface;
-	unsigned short numsurfaces;
-} mnode_t;
-
-typedef struct mleaf_s
-{
-	/* common with node */
-	int contents;               /* wil be a negative contents number */
-	int visframe;               /* node needs to be traversed if current */
-
-	float minmaxs[6];           /* for bounding box culling */
-
-	struct mnode_s *parent;
-
-	/* leaf specific */
-	int cluster;
-	int area;
-
-	msurface_t **firstmarksurface;
-	int nummarksurfaces;
-} mleaf_t;
 
 /* Whole model */
 
@@ -218,7 +144,6 @@ typedef struct model_s
 
 void Mod_Init(void);
 void Mod_ClearAll(void);
-mleaf_t *Mod_PointInLeaf(vec3_t p, model_t *model);
 const byte *Mod_ClusterPVS(int cluster, const model_t *model);
 
 void Mod_Modellist_f(void);

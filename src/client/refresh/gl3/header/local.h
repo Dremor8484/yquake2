@@ -381,7 +381,6 @@ GL3_BindEBO(GLuint ebo)
 
 extern void GL3_BufferAndDraw3D(const gl3_3D_vtx_t* verts, int numVerts, GLenum drawMode);
 
-extern qboolean GL3_CullBox(vec3_t mins, vec3_t maxs);
 extern void GL3_RotateForEntity(entity_t *e);
 
 // gl3_sdl.c
@@ -406,14 +405,12 @@ extern struct model_s * GL3_RegisterModel(char *name);
 extern void GL3_EndRegistration(void);
 extern void GL3_Mod_Modellist_f(void);
 extern const byte* GL3_Mod_ClusterPVS(int cluster, const gl3model_t *model);
-extern mleaf_t* GL3_Mod_PointInLeaf(vec3_t p, gl3model_t *model);
 
 // gl3_draw.c
 extern void GL3_Draw_InitLocal(void);
 extern void GL3_Draw_ShutdownLocal(void);
 extern gl3image_t * GL3_Draw_FindPic(char *name);
 extern void GL3_Draw_GetPicSize(int *w, int *h, char *pic);
-extern int GL3_Draw_GetPalette(void);
 
 extern void GL3_Draw_PicScaled(int x, int y, char *pic, float factor);
 extern void GL3_Draw_StretchPic(int x, int y, int w, int h, char *pic);
@@ -441,8 +438,9 @@ extern void GL3_TextureMode(char *string);
 extern void GL3_Bind(GLuint texnum);
 extern void GL3_BindLightmap(int lightmapnum);
 extern gl3image_t *GL3_LoadPic(char *name, byte *pic, int width, int realwidth,
-                               int height, int realheight, imagetype_t type, int bits);
-extern gl3image_t *GL3_FindImage(char *name, imagetype_t type);
+                               int height, int realheight, size_t data_size,
+                               imagetype_t type, int bits);
+extern gl3image_t *GL3_FindImage(const char *name, imagetype_t type);
 extern gl3image_t *GL3_RegisterSkin(char *name);
 extern void GL3_ShutdownImages(void);
 extern void GL3_FreeUnusedImages(void);
@@ -450,7 +448,9 @@ extern qboolean GL3_ImageHasFreeSpace(void);
 extern void GL3_ImageList_f(void);
 
 // gl3_light.c
-extern void GL3_MarkLights(dlight_t *light, int bit, mnode_t *node);
+extern int r_dlightframecount;
+extern void GL3_MarkSurfaceLights(dlight_t *light, int bit, mnode_t *node,
+	int r_dlightframecount);
 extern void GL3_PushDlights(void);
 extern void GL3_LightPoint(entity_t *currententity, vec3_t p, vec3_t color);
 extern void GL3_BuildLightMap(msurface_t *surf, int offsetInLMbuf, int stride);
@@ -522,7 +522,7 @@ extern cvar_t *gl_nobind;
 extern cvar_t *r_lockpvs;
 extern cvar_t *r_novis;
 
-extern cvar_t *gl_cull;
+extern cvar_t *r_cull;
 extern cvar_t *gl_zfix;
 extern cvar_t *r_fullbright;
 
@@ -543,11 +543,14 @@ extern cvar_t *gl3_overbrightbits;
 extern cvar_t *gl3_particle_fade_factor;
 extern cvar_t *gl3_particle_square;
 extern cvar_t *gl3_colorlight;
+extern cvar_t *gl_polyblend;
 
 extern cvar_t *r_modulate;
 extern cvar_t *gl_lightmap;
 extern cvar_t *gl_shadows;
 extern cvar_t *r_fixsurfsky;
+extern cvar_t *r_palettedtexture;
+extern cvar_t *r_validation;
 
 extern cvar_t *gl3_debugcontext;
 

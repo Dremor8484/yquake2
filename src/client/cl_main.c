@@ -56,6 +56,8 @@ cvar_t *cl_showclamp;
 
 cvar_t *cl_paused;
 cvar_t *cl_loadpaused;
+cvar_t *cl_audiopaused;
+cvar_t *cl_unpaused_scvis;
 
 cvar_t *cl_lightlevel;
 cvar_t *cl_r1q2_lightstyle;
@@ -68,7 +70,6 @@ cvar_t *rate;
 cvar_t *fov;
 cvar_t *horplus;
 cvar_t *windowed_mouse;
-cvar_t *msg;
 cvar_t *hand;
 cvar_t *gender;
 cvar_t *gender_auto;
@@ -517,6 +518,8 @@ CL_InitLocal(void)
 	cl_timeout = Cvar_Get("cl_timeout", "120", 0);
 	cl_paused = Cvar_Get("paused", "0", 0);
 	cl_loadpaused = Cvar_Get("cl_loadpaused", "1", CVAR_ARCHIVE);
+	cl_audiopaused = Cvar_Get("cl_audiopaused", "1", CVAR_ARCHIVE);
+	cl_unpaused_scvis = Cvar_Get("cl_unpaused_scvis", "1", CVAR_ARCHIVE);
 
 	gl1_stereo = Cvar_Get( "gl1_stereo", "0", CVAR_ARCHIVE );
 	gl1_stereo_separation = Cvar_Get( "gl1_stereo_separation", "1", CVAR_ARCHIVE );
@@ -533,7 +536,6 @@ CL_InitLocal(void)
 	name = Cvar_Get("name", "unnamed", CVAR_USERINFO | CVAR_ARCHIVE);
 	skin = Cvar_Get("skin", "male/grunt", CVAR_USERINFO | CVAR_ARCHIVE);
 	rate = Cvar_Get("rate", "8000", CVAR_USERINFO | CVAR_ARCHIVE);
-	msg = Cvar_Get("msg", "1", CVAR_USERINFO | CVAR_ARCHIVE);
 	hand = Cvar_Get("hand", "0", CVAR_USERINFO | CVAR_ARCHIVE);
 	fov = Cvar_Get("fov", "90", CVAR_USERINFO | CVAR_ARCHIVE);
 	horplus = Cvar_Get("horplus", "1", CVAR_ARCHIVE);

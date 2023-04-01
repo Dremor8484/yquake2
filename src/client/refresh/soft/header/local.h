@@ -426,6 +426,7 @@ extern cvar_t	*sw_stipplealpha;
 extern cvar_t	*sw_surfcacheoverride;
 extern cvar_t	*sw_waterwarp;
 extern cvar_t	*sw_gunzposition;
+extern cvar_t	*r_validation;
 extern cvar_t	*r_retexturing;
 extern cvar_t	*r_scale8bittextures;
 
@@ -440,10 +441,12 @@ extern cvar_t	*r_lerpmodels;
 extern cvar_t	*r_lightlevel;
 extern cvar_t	*r_modulate;
 extern cvar_t	*r_fixsurfsky;
+extern cvar_t	*r_cull;
 
 
 extern clipplane_t	view_clipplanes[4];
 extern int		*pfrustum_indexes[4];
+extern cplane_t	frustum[4];
 
 
 //=============================================================================
@@ -585,12 +588,10 @@ void	RE_Draw_TileClear (int x, int y, int w, int h, char *name);
 void	RE_Draw_Fill (int x, int y, int w, int h, int c);
 void	RE_Draw_FadeScreen (void);
 
-void LoadPCX (char *filename, byte **pic, byte **palette, int *width, int *height);
-
 extern byte d_8to24table[256 * 4];
 void	R_InitImages(void);
 void	R_ShutdownImages(void);
-image_t	*R_FindImage(char *name, imagetype_t type);
+image_t	*R_FindImage(const char *name, imagetype_t type);
 byte	*Get_BestImageSize(const image_t *image, int *req_width, int *req_height);
 void	R_FreeUnusedImages(void);
 qboolean R_ImageHasFreeSpace(void);

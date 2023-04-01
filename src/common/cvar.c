@@ -62,7 +62,8 @@ replacement_t replacements[] = {
 	{"gl_mode", "r_mode"},
 	{"gl_modulate", "r_modulate"},
 	{"gl_overbrightbits", "gl1_overbrightbits"},
-	{"gl_palettedtextures", "gl1_palettedtextures"},
+	{"gl_palettedtextures", "r_palettedtextures"},
+	{"gl1_palettedtextures", "r_palettedtextures"},
 	{"gl_particle_min_size", "gl1_particle_min_size"},
 	{"gl_particle_max_size", "gl1_particle_max_size"},
 	{"gl_particle_size", "gl1_particle_size"},
@@ -71,7 +72,6 @@ replacement_t replacements[] = {
 	{"gl_particle_att_c", "gl1_particle_att_c"},
 	{"gl_picmip", "gl1_picmip"},
 	{"gl_pointparameters", "gl1_pointparameters"},
-	{"gl_polyblend", "gl1_polyblend"},
 	{"gl_round_down", "gl1_round_down"},
 	{"gl_saturatelightning", "gl1_saturatelightning"},
 	{"gl_stencilshadows", "gl1_stencilshadows"},
@@ -89,6 +89,8 @@ replacement_t replacements[] = {
 	{"gl_shadows", "r_shadows"},
 	{"gl_anisotropic", "r_anisotropic"},
 	{"gl_lightmap", "r_lighmap"},
+	{"gl1_polyblend", "gl_polyblend"},
+	{"gl_cull", "r_cull"},
 	{"intensity", "gl1_intensity"}
 };
 

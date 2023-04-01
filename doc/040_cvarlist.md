@@ -133,6 +133,9 @@ Set `0` by default.
   loading. If set to `0` pause mode is never entered, this is the
   Vanilla Quake II behaviour.
 
+* **cl_unpaused_scvis**: If set to `1` (the default) the client unpause
+  when the screen becomes visible.
+
 * **cl_r1q2_lightstyle**: Since the first release Yamagi Quake II used
   the R1Q2 colors for the dynamic lights of rockets. Set to `0` to get
   the Vanilla Quake II colors. Defaults to `1`.
@@ -270,10 +273,12 @@ Set `0` by default.
   default this cvar is disabled (set to 0).
 
 * **s_reverb_preset**: Enable reverb effect. By default this cvar is disabled
-  (set to `-1`). Possibe values:
+  (set to `-1`). Possible values:
   `-2`: Auto reverb effect select,
   `-1`: Disable reverb effect,
   `>=0`: select predefined effect.
+
+* **cl_audiopaused**: If set to `1` the sounds pause when the game does.
 
 ## Graphics (all renderers)
 
@@ -546,6 +551,22 @@ Set `0` by default.
   the controller alone. As these vary by device, it's better to use
   'calibrate' in the 'gamepad' -> 'gyro' menu to set them.
 
+* **joy_haptic_magnitude**: Haptic magnitude value, By default this cvar
+  is `0.0` or disabled. Valid values are positive, e.g. 0..2.0.
+
+* **joy_haptic_filter**: List of sound file names produced haptic feedback
+  separated by space. `*` could be used for replace part of file name as
+  regular expression. `!` at the beginning of value could be used for skip
+  file name equal to value.
+
+* **joy_haptic_distance**: Haptic maximum effect distance value, By default
+  this cvar is `100.0`. Any positive value is valid. E.g. effect of shoot
+  to a barrel has 58 points when player stay near the barrel.
+
+* **s_feedback_kind**: Select kind of controller feedback to use. By default
+  this cvar is `0`. Possible values:
+  `0`: Rumble feedback,
+  `1`: Haptic feedback.
 
 ## cvar operations
 
